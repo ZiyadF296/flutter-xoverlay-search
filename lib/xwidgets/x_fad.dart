@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-///common widget for handling FocusableActionDetector
-///supports both mouse (hover) and keyboard (specific list of keys)
-///supported keys: escape, tab, shift tab, enter, arrow up, arrow down
-///simple callback functions for each of these events
+/// Common widget for handling FocusableActionDetector supports both mouse 
+/// (hover) and keyboard (specific list of keys) supported keys: escape, tab, 
+/// shift tab, enter, arrow up, arrow down simple callback functions for each 
+/// of these events
 class XFAD extends StatelessWidget {
   final Function onEscCallback;
   final Function onTabCallback;
@@ -52,7 +52,7 @@ class XFAD extends StatelessWidget {
       case _XIntentType.Tab:
         if (onTabCallback != null) onTabCallback();
         break;
-      case _XIntentType.ShifTab:
+      case _XIntentType.ShiftTab:
         if (onShiftTabCallback != null) onShiftTabCallback();
         break;
       case _XIntentType.Enter:
@@ -80,7 +80,7 @@ class _XIntent extends Intent {
 
   const _XIntent.esc() : type = _XIntentType.Esc;
   const _XIntent.tab() : type = _XIntentType.Tab;
-  const _XIntent.shiftTab() : type = _XIntentType.ShifTab;
+  const _XIntent.shiftTab() : type = _XIntentType.ShiftTab;
   const _XIntent.enter() : type = _XIntentType.Enter;
   const _XIntent.arrowUp() : type = _XIntentType.ArrowUp;
   const _XIntent.arrowDown() : type = _XIntentType.ArrowDown;
@@ -89,7 +89,7 @@ class _XIntent extends Intent {
 enum _XIntentType {
   Esc,
   Tab,
-  ShifTab,
+  ShiftTab,
   Enter,
   ArrowUp,
   ArrowDown,

@@ -5,10 +5,10 @@ import 'xwidget_barrel.dart';
 typedef void SearchCallbackDropdown(freeSearchTextAsUserIsTyping);
 typedef String InitialValueCallback();
 
-///editiable or searchable dropdown
-///uses x_overlay.dart to display overlays
-///it is just a TextField with overlay below it
-///refer _fromField() method of search_options.dart on use of this widget
+/// editable or searchable dropdown
+/// uses x_overlay.dart to display overlays
+/// it is just a TextField with overlay below it
+/// refer _fromField() method of search_options.dart on use of this widget
 class XSearchDropdown extends StatefulWidget {
   final String labelText;
   final Widget searchListInOverlay;
@@ -47,7 +47,9 @@ class XSearchDropdownController {
 
   void setText({String text, bool hide}) {
     _xSearchDropdownState._textEditingController.text = text;
-    _xSearchDropdownState._textEditingController.selection = TextSelection.fromPosition(TextPosition(offset: _xSearchDropdownState._textEditingController.text.length));
+    _xSearchDropdownState._textEditingController.selection =
+        TextSelection.fromPosition(TextPosition(
+            offset: _xSearchDropdownState._textEditingController.text.length));
     _xSearchDropdownState._focus();
     if (hide != null && hide) _xSearchDropdownState._hide();
   }
@@ -80,23 +82,30 @@ class _XSearchDropdownState extends State<XSearchDropdown> {
   void _focus() => widget.searchTextFocusNode.requestFocus();
 
   ///as and when there is a change in search textfield
-  void _searchTextEditingControllerListener() => _textEditingController.addListener(() {
+  void _searchTextEditingControllerListener() =>
+      _textEditingController.addListener(() {
         if (_currentSearchVal != _textEditingController.text) {
           _currentSearchVal = _textEditingController.text;
           widget.searchCallback(_textEditingController.text);
         }
 
-        _showSearchOverlay = widget.searchTextFocusNode.hasFocus && _textEditingController.text.isNotEmpty;
+        _showSearchOverlay = widget.searchTextFocusNode.hasFocus &&
+            _textEditingController.text.isNotEmpty;
       });
 
   ///focus listener on textfield
-  void _searchTextFocusNodeListener() => widget.searchTextFocusNode.addListener(() {
-        if (!widget.searchTextFocusNode.hasFocus) setState(() => _showSearchOverlay = false);
+  void _searchTextFocusNodeListener() =>
+      widget.searchTextFocusNode.addListener(() {
+        if (!widget.searchTextFocusNode.hasFocus)
+          setState(() => _showSearchOverlay = false);
       });
 
   ///display overlay
-  void _displayAppropriateOverlay() => WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _showSearchOverlay ? _xOverlayController.showOverlay('list') : _xOverlayController.hideOverlay(false);
+  void _displayAppropriateOverlay() =>
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _showSearchOverlay
+            ? _xOverlayController.showOverlay('list')
+            : _xOverlayController.hideOverlay(false);
       });
 
   @override
@@ -140,7 +149,8 @@ class _XSearchDropdownState extends State<XSearchDropdown> {
           focusNode: widget.searchTextFocusNode,
           controller: _textEditingController,
           style: const TextStyle(fontWeight: FontWeight.normal),
-          decoration: InputDecoration(labelText: widget.labelText, counterText: ''),
+          decoration:
+              InputDecoration(labelText: widget.labelText, counterText: ''),
           onSubmitted: (val) => widget.onSubmitted(val),
         ),
       );

@@ -1,10 +1,10 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-///Overlay widget that be parent of any widget to show overlay content
-///This is generic implementation refer x_search_textbox or x_search_dropdown for real widget implementation
-///supports multiple widgets that are mutually exclusive
+/// Overlay widget that be parent of any widget to show overlay content
+/// This is generic implementation refer x_search_textbox or x_search_dropdown
+/// for real widget implementation supports multiple widgets that are mutually
+/// exclusive
 class XOverlay extends StatefulWidget {
   final Widget child;
   final Map<String, Widget> insideOverlayWidgetMap;
@@ -28,9 +28,9 @@ class XOverlay extends StatefulWidget {
   }
 }
 
-///xoverlay stack ... handle on multiple overlays as stack
-///this is helpful in hiding or shown contents as and when required
-///is very handy when we have nested overlays
+/// xoverlay stack ... handle on multiple overlays as stack
+/// this is helpful in hiding or shown contents as and when required
+/// is very handy when we have nested overlays
 class XOverlayStack {
   static final XOverlayStack _instance = XOverlayStack._init();
   final List<XOverlayController> _stack = [];
@@ -44,12 +44,16 @@ class XOverlayStack {
   void _push(XOverlayController x) => _stack.add(x);
 
   void hideAll() {
-    if (_stack.length > 0) _stack.forEach((element) => element.hideOverlay(false));
+    if (_stack.length > 0)
+      _stack.forEach((element) => element.hideOverlay(false));
   }
 
   ///first visible from last
   void hideFirstVisible() {
-    if (_stack.length > 0) _stack.reversed.firstWhere((element) => element.isVisible())?.hideOverlay(false);
+    if (_stack.length > 0)
+      _stack.reversed
+          .firstWhere((element) => element.isVisible())
+          ?.hideOverlay(false);
   }
 
   void _remove(XOverlayController x) {
@@ -60,8 +64,8 @@ class XOverlayStack {
   XOverlayController peek() => _stack.length > 0 ? _stack.last : null;
 }
 
-///controller to provider handle to the parent with some useful methods
-///also refer XOverlayStack
+/// Controller to provider handle to the parent with some useful methods
+/// also refer XOverlayStack
 class XOverlayController {
   _XOverlayState _xOverlayState;
 
@@ -84,34 +88,38 @@ class _XOverlayState extends State<XOverlay> {
   _XOverlayState();
 
   @override
-  Widget build(BuildContext context) => CompositedTransformTarget(
-        link: this._layerLink,
-        child: Container(
-          key: _globalKeyParent,
-          child: widget.child,
-        ),
-      );
+  Widget build(BuildContext context) {
+    return CompositedTransformTarget(
+      link: this._layerLink,
+      child: Container(
+        key: _globalKeyParent,
+        child: widget.child,
+      ),
+    );
+  }
 
-  ///overlay with glass pane + actual body
-  OverlayEntry _overlay(String widgetId) => OverlayEntry(
-        builder: (context) => _globalKeyParent.currentContext != null
-            ? Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  _glassPanelLeft(),
-                  _glassPanelBottom(),
-                  _glassPanelRight(),
-                  _glassPanelTop(),
-                  _overlayBody(widgetId),
-                ],
-              )
-            : Container(),
-      );
+  /// Overlay with glass pane + actual body
+  OverlayEntry _overlay(String widgetId) {
+    return OverlayEntry(
+      builder: (context) => _globalKeyParent.currentContext != null
+          ? Stack(
+              clipBehavior: Clip.none,
+              children: [
+                _glassPanelLeft(),
+                _glassPanelBottom(),
+                _glassPanelRight(),
+                _glassPanelTop(),
+                _overlayBody(widgetId),
+              ],
+            )
+          : const SizedBox.shrink(),
+    );
+  }
 
   ///actual body of overlay eg: list
   Widget _overlayBody(widgetId) {
     RenderBox renderBox = _globalKeyParent.currentContext.findRenderObject();
-    var size = renderBox.size;
+    Size size = renderBox.size;
     return Positioned(
       width: size.width,
       //height: widget.overlayHeight,
@@ -144,7 +152,8 @@ class _XOverlayState extends State<XOverlay> {
     _overlayEntry?.remove();
     _overlayEntry = null;
     widget.onHideOverlayFunc();
-    if (removeFocus) WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+    if (removeFocus)
+      WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
     isVisible = false;
   }
 
@@ -201,7 +210,8 @@ class _XOverlayState extends State<XOverlay> {
   }
 
   ///glass pane that covers the whole screen
-  Widget _glassPane({double left, double top, double width, double height}) => Positioned(
+  Widget _glassPane({double left, double top, double width, double height}) =>
+      Positioned(
         left: left,
         top: top,
         width: width,

@@ -2,20 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'xwidget_barrel.dart';
 
-///a composite search textbox (like gmail or google news)
-///uses x_overlay.dart to display all overlays
-///features:
-///1. 'suggest list' that appears right below textbox
-///2. 'x' icon appears to clear existing text search
-///3. 'search options' that appears below textbox (optional)
-///4. 'pick a filter' that appears below textbox (optional)
+/// A composite search textbox (like gmail or google news)
+/// uses x_overlay.dart to display all overlays
+/// features:
+/// 1. 'suggest list' that appears right below textbox
+/// 2. 'x' icon appears to clear existing text search
+/// 3. 'search options' that appears below textbox (optional)
+/// 4. 'pick a filter' that appears below textbox (optional)
 ///
-///all overlay widgets are mutually exclusive
+/// All overlay widgets are mutually exclusive
 
-///search callback function (to refresh the actual search list)
+/// Search callback function (to refresh the actual search list)
 typedef void SearchCallbackText(freeSearchText);
 
-///this is for suggestion
+/// This is for suggestion
 typedef void SuggestCallback(freeSearchTextAsUserIsTyping);
 
 class XSearchTextbox extends StatefulWidget {
@@ -46,7 +46,8 @@ class XSearchTextbox extends StatefulWidget {
 
 class _XSearchTextboxState extends State<XSearchTextbox> {
   final XOverlayController _xOverlayController = XOverlayController();
-  final TextEditingController _searchTextEditingController = TextEditingController();
+  final TextEditingController _searchTextEditingController =
+      TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
 
   ///state fields for suggest overlay
@@ -74,14 +75,16 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
   }
 
   ///as and when there is a change in search textfield
-  void _searchTextEditingControllerListener() => _searchTextEditingController.addListener(() => setState(() {
-        if (_currentSearchVal != _searchTextEditingController.text) {
-          _currentSearchVal = _searchTextEditingController.text;
-          widget.suggestCallbackFunc(_searchTextEditingController.text);
-        }
+  void _searchTextEditingControllerListener() =>
+      _searchTextEditingController.addListener(() => setState(() {
+            if (_currentSearchVal != _searchTextEditingController.text) {
+              _currentSearchVal = _searchTextEditingController.text;
+              widget.suggestCallbackFunc(_searchTextEditingController.text);
+            }
 
-        _showSuggestOverlay = _searchTextFocusNode.hasFocus && _searchTextEditingController.text.isNotEmpty; //&& !_firstFocus;
-      }));
+            _showSuggestOverlay = _searchTextFocusNode.hasFocus &&
+                _searchTextEditingController.text.isNotEmpty; //&& !_firstFocus;
+          }));
 
   ///focus listener on textfield
   void _searchTextFocusNodeListener() => _searchTextFocusNode.addListener(() {
@@ -95,7 +98,8 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
       });
 
   ///display either suggest or search options overlay on post frame callback
-  void _displayAppropriateOverlay() => WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  void _displayAppropriateOverlay() =>
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (_searchTextFocusNode.hasFocus && _showSuggestOverlay)
           _xOverlayController.showOverlay('suggest');
         else if (_showSearchOptionsOverlay) {
@@ -119,8 +123,10 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
       },
       insideOverlayWidgetMap: {
         'suggest': widget.suggestListInOverlay,
-        if (widget.searchOptionsInOverlay != null) 'searchOptions': widget.searchOptionsInOverlay,
-        if (widget.filterOptionsInOverlay != null) 'filterOptions': widget.filterOptionsInOverlay,
+        if (widget.searchOptionsInOverlay != null)
+          'searchOptions': widget.searchOptionsInOverlay,
+        if (widget.filterOptionsInOverlay != null)
+          'filterOptions': widget.filterOptionsInOverlay,
       },
       xOverlayController: _xOverlayController,
       child: Container(
@@ -139,24 +145,28 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
             Flexible(flex: 8, child: _searchTextfield()),
             Flexible(
               flex: 1,
-              child: _searchTextEditingController.text.isNotEmpty ? _searchClear() : Container(width: 42),
+              child: _searchTextEditingController.text.isNotEmpty
+                  ? _searchClear()
+                  : Container(width: 42),
             ),
-            if (widget.searchOptionsInOverlay != null) Flexible(flex: 1, child: _searchOptions()),
-            if (widget.filterOptionsInOverlay != null) Flexible(flex: 1, child: _filters()),
+            if (widget.searchOptionsInOverlay != null)
+              Flexible(flex: 1, child: _searchOptions()),
+            if (widget.filterOptionsInOverlay != null)
+              Flexible(flex: 1, child: _filters()),
           ],
         ),
       ),
     );
   }
 
-  ///central place to invoke callbacl searchFunc
-  ///need to set initialvalue before routing
+  /// Central place to invoke callback searchFunc
+  /// need to set initialvalue before routing
   void _callSearchFunc() {
     WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
     String toSearch = this._searchTextEditingController.text;
 
-    ///set initial value back it .. for routing context
-    ///set to current value to avoid textcontroller listener listening to the change
+    /// Set initial value back it .. for routing context
+    /// set to current value to avoid textcontroller listener listening to the change
     _currentSearchVal = widget.initialvalue;
     this._searchTextEditingController.text = widget.initialvalue;
 
@@ -174,7 +184,7 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
         ),
       );
 
-  ///container top margin is for a glitch in web
+  /// Container top margin is for a glitch in web
   Widget _searchTextfield() => Container(
         margin: EdgeInsets.fromLTRB(0, kIsWeb ? 1 : 0, 0, 0),
         child: TextField(
@@ -189,7 +199,9 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
             isCollapsed: false,
             isDense: true,
             hintText: widget.searchHintText,
-            hintStyle: TextStyle(color: Color.fromRGBO(155, 155, 155, 1), fontWeight: FontWeight.normal),
+            hintStyle: TextStyle(
+                color: Color.fromRGBO(155, 155, 155, 1),
+                fontWeight: FontWeight.normal),
             filled: true,
             fillColor: Colors.grey[100],
             enabledBorder: OutlineInputBorder(
@@ -203,51 +215,57 @@ class _XSearchTextboxState extends State<XSearchTextbox> {
         ),
       );
 
-  Widget _searchClear() => Tooltip(
-        message: 'Clear Search',
-        child: IconButton(
-          icon: Icon(Icons.close, color: Colors.grey[500]),
-          onPressed: () {
-            this._searchTextEditingController.text = '';
-            _callSearchFunc();
-          },
-          splashRadius: 25,
-        ),
-      );
+  Widget _searchClear() {
+    return Tooltip(
+      message: 'Clear Search',
+      child: IconButton(
+        icon: Icon(Icons.close, color: Colors.grey[500]),
+        onPressed: () {
+          this._searchTextEditingController.text = '';
+          _callSearchFunc();
+        },
+        splashRadius: 25,
+      ),
+    );
+  }
 
-  Widget _searchOptions() => Tooltip(
-        message: 'Search Options',
-        child: IconButton(
-          icon: Icon(Icons.arrow_drop_down, color: Colors.grey[500]),
-          onPressed: () {
-            setState(() {
-              _showSearchOptionsOverlay = !_showSearchOptionsOverlay;
-              if (_showSearchOptionsOverlay) {
-                _showSuggestOverlay = false;
-                _showFilterOptionsOverlay = false;
-              }
-            });
-          },
-          splashRadius: 25,
-        ).xShowPointerOnHover,
-      );
+  Widget _searchOptions() {
+    return Tooltip(
+      message: 'Search Options',
+      child: IconButton(
+        icon: Icon(Icons.arrow_drop_down, color: Colors.grey[500]),
+        onPressed: () {
+          setState(() {
+            _showSearchOptionsOverlay = !_showSearchOptionsOverlay;
+            if (_showSearchOptionsOverlay) {
+              _showSuggestOverlay = false;
+              _showFilterOptionsOverlay = false;
+            }
+          });
+        },
+        splashRadius: 25,
+      ).xShowPointerOnHover,
+    );
+  }
 
-  Widget _filters() => Tooltip(
-        message: this.widget.filterName ?? 'Filter Options',
-        child: IconButton(
-          icon: Icon(Icons.filter_alt_sharp, color: Colors.grey[400], size: 20),
-          onPressed: () {
-            setState(() {
-              _showFilterOptionsOverlay = !_showFilterOptionsOverlay;
-              if (_showFilterOptionsOverlay) {
-                _showSuggestOverlay = false;
-                _showSearchOptionsOverlay = false;
-              }
-            });
-          },
-          splashRadius: 25,
-        ),
-      );
+  Widget _filters() {
+    return Tooltip(
+      message: this.widget.filterName ?? 'Filter Options',
+      child: IconButton(
+        icon: Icon(Icons.filter_alt_sharp, color: Colors.grey[400], size: 20),
+        onPressed: () {
+          setState(() {
+            _showFilterOptionsOverlay = !_showFilterOptionsOverlay;
+            if (_showFilterOptionsOverlay) {
+              _showSuggestOverlay = false;
+              _showSearchOptionsOverlay = false;
+            }
+          });
+        },
+        splashRadius: 25,
+      ),
+    );
+  }
 
   @override
   void dispose() {
